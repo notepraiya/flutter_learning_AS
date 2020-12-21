@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'tapbox_c.dart';
+import 'tapbox_b.dart';
+import 'tapbox_a.dart';
+import 'package:flutter_learning_as/adding_interactivity.dart';
 import 'package:flutter_learning_as/building_layouts.dart';
 import 'package:flutter_learning_as/my_home_page.dart';
 
@@ -16,7 +20,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
       ),
       // home: MyHomePage(title: 'Flutter Learning AS'),
-      home: BuildingLayouts(),
+      // home: AddingInteractivity(),
+      // home: TapboxA(),
+      // home: TapboxBParent(),
+      home: TapboxCParent(),
     );
   }
 }

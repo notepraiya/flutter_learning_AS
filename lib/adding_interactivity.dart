@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BuildingLayouts extends StatelessWidget {
+class AddingInteractivity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,13 +49,52 @@ class SectionTitle extends StatelessWidget {
               ],
             ),
           ),
-          Icon(
-            Icons.star,
-            color: Colors.lightBlue,
-          ),
-          Text('41'),
+          Favorite(),
         ],
       ),
+    );
+  }
+}
+
+class Favorite extends StatefulWidget {
+  @override
+  _FavoriteState createState() => _FavoriteState();
+}
+
+class _FavoriteState extends State<Favorite> {
+  bool _isFavorited = true;
+  int _favoriteCount = 39;
+
+  void _toggleFavorite() {
+    setState(() {
+      if (_isFavorited) {
+        _favoriteCount -= 1;
+        _isFavorited = false;
+      } else {
+        _favoriteCount += 1;
+        _isFavorited = true;
+      }
+    });
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(0),
+          child: IconButton(
+            icon: (_isFavorited ? Icon(Icons.star) : Icon(Icons.star_border)),
+            color: Colors.red[500],
+            onPressed: _toggleFavorite,
+          ),
+        ),
+        SizedBox(
+          width: 18,
+          child: Text('$_favoriteCount'),
+        ),
+      ],
     );
   }
 }
