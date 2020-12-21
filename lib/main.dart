@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_learning_as/building_layouts.dart';
 import 'package:flutter_learning_as/my_home_page.dart';
-import 'package:flutter_learning_as/category.dart';
-import 'package:flutter_learning_as/category_route.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,8 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
       ),
       // home: MyHomePage(title: 'Flutter Learning AS'),
-      // home: Category(name: 'Hello, Category', color: Colors.lightBlue, iconLocation: Icons.cake, ),
-      home: CategoryRoute(),
+      home: BuildingLayouts(),
     );
   }
 }
