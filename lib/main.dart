@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'tapbox_c.dart';
-import 'tapbox_b.dart';
-import 'tapbox_a.dart';
-import 'package:flutter_learning_as/adding_interactivity.dart';
-import 'package:flutter_learning_as/building_layouts.dart';
+import 'animates/animate1.dart';
+import 'animates/animate2.dart';
+import 'animates/animate3.dart';
+import 'animates/animate4.dart';
+import 'animates/animate5.dart';
+import 'states/tapbox_c.dart';
+import 'states/tapbox_b.dart';
+import 'states/tapbox_a.dart';
+import 'layouts/adding_interactivity.dart';
+import 'layouts/building_layouts.dart';
 import 'package:flutter_learning_as/my_home_page.dart';
 
 void main() {
@@ -23,7 +28,10 @@ class MyApp extends StatelessWidget {
       // home: AddingInteractivity(),
       // home: TapboxA(),
       // home: TapboxBParent(),
-      home: TapboxCParent(),
+      // home: TapboxCParent(),
+      // home: Animate1(),
+      // home: Animate4(),
+      home: Animate5(),
     );
   }
 }
