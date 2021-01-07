@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_learning_as/http/http1.dart';
+import 'package:flutter_learning_as/timers/timer1.dart';
 import 'animates/animate1.dart';
 import 'animates/animate2.dart';
 import 'animates/animate3.dart';
@@ -31,7 +33,9 @@ class MyApp extends StatelessWidget {
       // home: TapboxCParent(),
       // home: Animate1(),
       // home: Animate4(),
-      home: Animate5(),
+      //home: Animate5(),
+      // home: Timer1(),
+      home: Http1(),
     );
   }
 }
