@@ -1,10 +1,8 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import 'models.dart';
+import 'apis.dart';
 
 class Http1 extends StatefulWidget {
   @override
@@ -13,6 +11,7 @@ class Http1 extends StatefulWidget {
 
 class _Http1State extends State<Http1> {
   Future<Album> _futureAlbum;
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -20,144 +19,170 @@ class _Http1State extends State<Http1> {
     _futureAlbum = fetchAlbum();
   }
 
+  void setFutureAlbum(Future<Album> futureAlbum) {
+    ;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Center(
-          child: FutureBuilder<Album>(
-            future: _futureAlbum,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasData) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('${snapshot.data?.title ?? 'Deleted'}'),
-                      ElevatedButton(
-                        child: Text('Delete Data'),
-                        onPressed: () {
-                          setState(() {
-                            _futureAlbum = deleteAlbum(snapshot.data.id.toString());
-                          });
-                        },
-                      ),
-                    ],
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-              }
-              return CircularProgressIndicator();
-            },
-          ),
-        ),
-        Container(
-          width: 250,
-          height: 650,
-          child: Center(
-            child: FutureBuilder<List<Photo>>(
-              future: fetchPhotos(http.Client()),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) print(snapshot.error);
-
-                return snapshot.hasData
-                    ? PhotosList(photos: snapshot.data)
-                    : Center(child: CircularProgressIndicator());
-              },
-            ),
-          ),
-        ),
+        _buildDelete(),
+        _buildCreate(),
+        _buildUpdate(),
+        _buildPhotoList(),
       ],
     );
   }
-}
 
-class Album {
-  final int userId;
-  final int id;
-  final String title;
-
-  Album({this.userId, this.id, this.title});
-
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
+  Widget _buildDelete() {
+    return Container(
+      child: Center(
+        child: FutureBuilder<Album>(
+          future: _futureAlbum,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      '${snapshot.data?.title ?? 'Deleted'}',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
+                    ElevatedButton(
+                      child: Text('Delete Data'),
+                      onPressed: () {
+                        setState(() {
+                          _futureAlbum =
+                              deleteAlbum(snapshot.data.id.toString());
+                        });
+                      },
+                    ),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text(
+                  "${snapshot.error}",
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                );
+              }
+            }
+            return CircularProgressIndicator();
+          },
+        ),
+      ),
     );
   }
-}
 
-Future<Album> fetchAlbum() async {
-  final response = await http.get(
-    'https://jsonplaceholder.typicode.com/albums/1',
-    headers: {HttpHeaders.authorizationHeader: "Basic your_api_token_here"},
-  );
+  Widget _buildCreate() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(8.0),
+      child: (_futureAlbum == null)
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(hintText: 'Enter Title'),
+                ),
+                ElevatedButton(
+                  child: Text('Create Data'),
+                  onPressed: () {
+                    setState(() {
+                      _futureAlbum = createAlbum(_controller.text);
+                    });
+                  },
+                ),
+              ],
+            )
+          : FutureBuilder<Album>(
+              future: _futureAlbum,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    snapshot.data.title,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text(
+                    "${snapshot.error}",
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  );
+                }
 
-  if (response.statusCode == 200) {
-    return Album.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to load album');
-  }
-}
-
-Future<Album> deleteAlbum(String id) async {
-  final http.Response response = await http.delete(
-    'https://jsonplaceholder.typicode.com/albums/$id',
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-  );
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON. After deleting,
-    // you'll get an empty JSON `{}` response.
-    // Don't return `null`, otherwise `snapshot.hasData`
-    // will always return false on `FutureBuilder`.
-    return Album.fromJson(jsonDecode(response.body));
-  } else {
-    // If the server did not return a "200 OK response",
-    // then throw an exception.
-    throw Exception('Failed to delete album.');
-  }
-}
-
-class Photo {
-  final int albumId;
-  final int id;
-  final String title;
-  final String url;
-  final String thumbnailUrl;
-
-  Photo({this.albumId, this.id, this.title, this.url, this.thumbnailUrl});
-
-  factory Photo.fromJson(Map<String, dynamic> json) {
-    return Photo(
-      albumId: json['albumId'] as int,
-      id: json['id'] as int,
-      title: json['title'] as String,
-      url: json['url'] as String,
-      thumbnailUrl: json['thumbnailUrl'] as String,
+                return CircularProgressIndicator();
+              },
+            ),
     );
   }
-}
 
+  Widget _buildUpdate() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(8.0),
+      child: FutureBuilder<Album>(
+        future: _futureAlbum,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(snapshot.data.title),
+                  TextField(
+                    controller: _controller,
+                    decoration: InputDecoration(hintText: 'Enter Title'),
+                  ),
+                  ElevatedButton(
+                    child: Text('Update Data'),
+                    onPressed: () {
+                      setState(() {
+                        _futureAlbum = updateAlbum(_controller.text);
+                      });
+                    },
+                  ),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+          }
 
-Future<List<Photo>> fetchPhotos(http.Client client) async {
-  final response =
-  await client.get('https://jsonplaceholder.typicode.com/photos');
+          return CircularProgressIndicator();
+        },
+      ),
+    );
+  }
 
-  // Use the compute function to run parsePhotos in a separate isolate.
-  return compute(parsePhotos, response.body);
-}
+  // use Isolate compute in apis fetchPhotos(http.Client())
+  Widget _buildPhotoList() {
+    return Container(
+      width: 250,
+      height: 150,
+      child: Center(
+        child: FutureBuilder<List<Photo>>(
+          future: fetchPhotos(http.Client()),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) print(snapshot.error);
 
-// A function that converts a response body into a List<Photo>.
-List<Photo> parsePhotos(String responseBody) {
-  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-
-  return parsed.map<Photo>((json) => Photo.fromJson(json)).toList();
+            return snapshot.hasData
+                ? PhotosList(photos: snapshot.data)
+                : Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+    );
+  }
 }
 
 class PhotosList extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_learning_as/http/http1.dart';
 import 'package:flutter_learning_as/timers/timer1.dart';
+import 'package:flutter_learning_as/websocket/ws1.dart';
 import 'animates/animate1.dart';
 import 'animates/animate2.dart';
 import 'animates/animate3.dart';
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
       // home: Animate4(),
       //home: Animate5(),
       // home: Timer1(),
-      home: Http1(),
+      //home: Scaffold(body: SafeArea(child: Http1())), //Need Scaffold cuz using TextField
+      home: Scaffold(body: SafeArea(child: Ws1(title: 'test'))), //Need Scaffold cuz using TextField
     );
   }
 }
