@@ -60,6 +60,7 @@ class _TextTwoState extends State<TextTwo> {
         ),
         RaisedButton(
           onPressed: () {
+            print('---------------------');
             print('TextTwoButton/pressed');
             setState(() {
               _counter++;
@@ -100,6 +101,7 @@ class _TextThreeState extends State<TextThree> {
         ),
         RaisedButton(
           onPressed: () {
+            print('-----------------------');
             print('TextThreeButton/pressed');
             setState(() {
               _counter++;
@@ -116,7 +118,7 @@ class _TextThreeState extends State<TextThree> {
 class TextThreeOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('render TextThreeOne/StatelessWidget');
+    print('render Child TextThreeOne/StatelessWidget');
     return Text(
       'TextThreeOne/StatelessWidget',
       style: TextStyle(

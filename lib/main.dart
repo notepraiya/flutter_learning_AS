@@ -7,7 +7,10 @@ import 'animates/animate2.dart';
 import 'animates/animate3.dart';
 import 'animates/animate4.dart';
 import 'animates/animate5.dart';
+import 'snackbar/snackbar.dart';
 import 'states/problem.dart';
+import 'states/provider1.dart';
+import 'states/provider2.dart';
 import 'states/tapbox_c.dart';
 import 'states/tapbox_b.dart';
 import 'states/tapbox_a.dart';
@@ -33,13 +36,16 @@ class MyApp extends StatelessWidget {
       // home: TapboxA(),
       // home: TapboxBParent(),
       // home: TapboxCParent(),
-      home: Problem(),
+      // home: Problem(),
+      // home: Provider1(),
+      home: Provider2(),
       // home: Animate1(),
       // home: Animate4(),
       //home: Animate5(),
       // home: Timer1(),
       //home: Scaffold(body: SafeArea(child: Http1())), //Need Scaffold cuz using TextField
       //home: Scaffold(body: SafeArea(child: Ws1(title: 'test'))), //Need Scaffold cuz using TextField
+      //home: Scaffold(body: SafeArea(child: Snackbar())),
     );
   }
 }
